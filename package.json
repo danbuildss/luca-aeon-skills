@@ -1,0 +1,29 @@
+{
+  "name": "@x402books/aeon-skill",
+  "version": "0.1.0",
+  "description": "x402Books AI financial intelligence skills for Aeon — wallet scanning, treasury monitoring, financial reports, and agent registry.",
+  "keywords": ["aeon", "skill", "agent", "wallet", "base", "x402", "financial", "intelligence", "onchain"],
+  "homepage": "https://github.com/danbuildss/x402books-aeon-skill",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danbuildss/x402books-aeon-skill.git"
+  },
+  "license": "MIT",
+  "main": "./skills/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "example": "ts-node examples/basic-agent.ts"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
