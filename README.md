@@ -1,9 +1,9 @@
-# x402Books Aeon Skill
+# Luca Aeon Skills
 
 **Financial intelligence skills for [Aeon](https://aeonframework.xyz) agents — powered by [x402Books AI](https://www.x402books.xyz).**
 
 ```bash
-./add-skill danbuildss/x402books-aeon-skill --all
+./add-skill danbuildss/luca-aeon-skills --all
 ```
 
 Two skills land in your Aeon fork:
@@ -23,8 +23,8 @@ The financial layer for Aeon operators.
 **No API key needed** — runs in demo mode by default using the x402Books treasury wallet so you can test with zero setup.
 
 ```bash
-git clone https://github.com/danbuildss/x402books-aeon-skill
-cd x402books-aeon-skill
+git clone https://github.com/danbuildss/luca-aeon-skills
+cd luca-aeon-skills
 npm install
 ts-node examples/basic-agent.ts
 ```
@@ -46,7 +46,7 @@ Get an API key at [x402books.xyz](https://www.x402books.xyz/developer).
 Scan any Base wallet. Returns income, spend, net flow, transaction count, x402 payment count, top category, token portfolio, counterparties, and a shareable report URL.
 
 ```typescript
-import { scanWalletSkill } from "@x402books/aeon-skill";
+import { scanWalletSkill } from "@x402books/luca-aeon-skills";
 
 const result = await scanWalletSkill.run({
   address: "0xYourWallet",
@@ -71,7 +71,7 @@ console.log(result.text);
 Get treasury health for any wallet. Returns a score out of 100, health label, budget status, net flow, and top expense/income categories. Use this on a schedule to monitor agent treasuries.
 
 ```typescript
-import { treasuryMonitorSkill } from "@x402books/aeon-skill";
+import { treasuryMonitorSkill } from "@x402books/luca-aeon-skills";
 
 const result = await treasuryMonitorSkill.run({
   address: "0xYourWallet",
@@ -94,7 +94,7 @@ console.log(result.text);
 Generate a shareable x402Books financial report URL for any wallet.
 
 ```typescript
-import { getReportSkill } from "@x402books/aeon-skill";
+import { getReportSkill } from "@x402books/luca-aeon-skills";
 
 const result = await getReportSkill.run({ address: "0xYourWallet" });
 // Report URL: https://www.x402books.xyz/report/0x...
@@ -107,7 +107,7 @@ const result = await getReportSkill.run({ address: "0xYourWallet" });
 Look up an agent in the x402Books Agent Financial Registry.
 
 ```typescript
-import { checkAgentSkill } from "@x402books/aeon-skill";
+import { checkAgentSkill } from "@x402books/luca-aeon-skills";
 
 const result = await checkAgentSkill.run({ name: "Luca" });
 // 1. Luca
@@ -134,7 +134,7 @@ $LUCA: `0xb2b335f832fd3f43461ebd1cd9831d93d9ca4ba3` on Base
 ## Use all skills together
 
 ```typescript
-import { x402BooksSkills } from "@x402books/aeon-skill";
+import { x402BooksSkills } from "@x402books/luca-aeon-skills";
 
 // Register all skills with your Aeon agent
 const agent = new AeonAgent({

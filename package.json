@@ -1,12 +1,12 @@
 {
-  "name": "@x402books/aeon-skill",
+  "name": "@x402books/luca-aeon-skills",
   "version": "0.1.0",
-  "description": "x402Books AI financial intelligence skills for Aeon — wallet scanning, treasury monitoring, financial reports, and agent registry.",
-  "keywords": ["aeon", "skill", "agent", "wallet", "base", "x402", "financial", "intelligence", "onchain"],
-  "homepage": "https://github.com/danbuildss/x402books-aeon-skill",
+  "description": "Luca's financial intelligence skills for Aeon — wallet scanning, treasury monitoring, financial reports, and agent registry.",
+  "keywords": ["aeon", "skill", "luca", "agent", "wallet", "base", "x402", "financial", "intelligence", "onchain"],
+  "homepage": "https://github.com/danbuildss/luca-aeon-skills",
   "repository": {
     "type": "git",
-    "url": "https://github.com/danbuildss/x402books-aeon-skill.git"
+    "url": "https://github.com/danbuildss/luca-aeon-skills.git"
   },
   "license": "MIT",
   "main": "./skills/index.ts",
