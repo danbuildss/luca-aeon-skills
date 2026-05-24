@@ -2,7 +2,18 @@
   "name": "@x402books/luca-aeon-skills",
   "version": "0.1.0",
   "description": "Luca's financial intelligence skills for Aeon — wallet scanning, treasury monitoring, financial reports, and agent registry.",
-  "keywords": ["aeon", "skill", "luca", "agent", "wallet", "base", "x402", "financial", "intelligence", "onchain"],
+  "keywords": [
+    "aeon",
+    "skill",
+    "luca",
+    "agent",
+    "wallet",
+    "base",
+    "x402",
+    "financial",
+    "intelligence",
+    "onchain"
+  ],
   "homepage": "https://github.com/danbuildss/luca-aeon-skills",
   "repository": {
     "type": "git",
@@ -16,7 +27,9 @@
     "example": "ts-node examples/basic-agent.ts"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "viem": "^2.50.4",
+    "x402-fetch": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

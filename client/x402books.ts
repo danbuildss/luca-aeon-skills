@@ -1,16 +1,68 @@
+import { wrapFetchWithPayment, createSigner } from "x402-fetch";
+import { privateKeyToAccount } from "viem/accounts";
+
 const BASE_URL = "https://www.x402books.xyz/api/v1";
-const SCAN_URL = "https://www.x402books.xyz/api/scan";
 const REGISTRY_URL = "https://www.x402books.xyz/api/registry/agents";
 const DEMO_WALLET = "0xb98f0de777eea8c481b64e33d3e0066cea38fa91";
 
-function headers(): Record<string, string> {
+// Auth modes (checked in priority order):
+//   1. X402BOOKS_API_KEY  → Bearer token, free access
+//   2. AGENT_PRIVATE_KEY  → x402 pay-per-call in USDC on Base (30% off with ≥1,000 $LUCA)
+//   3. Neither            → demo mode using x402Books treasury wallet
+
+function apiKeyHeaders(): Record<string, string> {
   const key = process.env.X402BOOKS_API_KEY;
   if (!key) return {};
   return { Authorization: `Bearer ${key}` };
 }
 
 function isDemoMode(): boolean {
-  return !process.env.X402BOOKS_API_KEY;
+  return !process.env.X402BOOKS_API_KEY && !process.env.AGENT_PRIVATE_KEY;
+}
+
+// Derive agent wallet address from private key for $LUCA discount header
+function getAgentWalletAddress(): string | null {
+  const pk = process.env.AGENT_PRIVATE_KEY;
+  if (!pk) return null;
+  try {
+    const account = privateKeyToAccount(pk as `0x${string}`);
+    return account.address;
+  } catch {
+    return null;
+  }
+}
+
+type PayFetch = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
+
+// Cached x402-fetch instance — initialized once on first paid call
+let _paymentFetch: PayFetch | null = null;
+
+async function getPaymentFetch(): Promise<PayFetch> {
+  if (_paymentFetch) return _paymentFetch;
+
+  const pk = process.env.AGENT_PRIVATE_KEY;
+  if (!pk) throw new Error("AGENT_PRIVATE_KEY is not set");
+
+  const signer = await createSigner("base", pk as `0x${string}`);
+  _paymentFetch = wrapFetchWithPayment(globalThis.fetch, signer) as PayFetch;
+  return _paymentFetch;
+}
+
+// Unified fetch: API key → free, private key → x402 payment, else → open/demo
+async function apiFetch(url: string): Promise<Response> {
+  if (process.env.X402BOOKS_API_KEY) {
+    return fetch(url, { headers: apiKeyHeaders() });
+  }
+
+  if (process.env.AGENT_PRIVATE_KEY) {
+    const agentWallet = getAgentWalletAddress();
+    const payFetch = await getPaymentFetch();
+    return payFetch(url, {
+      headers: agentWallet ? { "x-agent-wallet": agentWallet } : {},
+    });
+  }
+
+  return fetch(url);
 }
 
 export type ScanResult = {
@@ -67,13 +119,13 @@ export type RegistryResult = {
 };
 
 async function fetchScan(address: string, range: "7d" | "30d"): Promise<ScanResult> {
-  const res = await fetch(`${SCAN_URL}?wallet=${address}&range=${range}`, { headers: headers() });
+  const res = await apiFetch(`${BASE_URL}/scan?wallet=${address}&range=${range}`);
   if (!res.ok) throw new Error(`x402Books scan failed: ${res.status}`);
   return res.json() as Promise<ScanResult>;
 }
 
 async function fetchTreasuryScore(address: string): Promise<TreasuryResult> {
-  const res = await fetch(`${BASE_URL}/agent-financial-state?wallet=${address}`, { headers: headers() });
+  const res = await apiFetch(`${BASE_URL}/agent-financial-state?wallet=${address}`);
   if (!res.ok) throw new Error(`x402Books treasury check failed: ${res.status}`);
   return res.json() as Promise<TreasuryResult>;
 }
